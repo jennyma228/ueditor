@@ -1325,20 +1325,20 @@ div.edui-box {
 
 /*link-dialog*/
 .edui-default .edui-for-link .edui-dialog-content {
-    width: 420px;
+    width: 320px;
     height: 200px;
     overflow: hidden;
 }
 /*background-dialog*/
 .edui-default .edui-for-background .edui-dialog-content {
-    width: 440px;
+    width: 320px;
     height: 280px;
     overflow: hidden;
 }
 
 /*template-dialog*/
 .edui-default .edui-for-template .edui-dialog-content {
-    width: 630px;
+    width: 320px;
     height: 390px;
     overflow: hidden;
 }
@@ -1360,7 +1360,7 @@ div.edui-box {
 
 /*image-dialog*/
 .edui-default .edui-for-insertimage .edui-dialog-content {
-    width: 650px;
+    width: 320px;
     height: 400px;
     overflow: hidden;
 }
@@ -1381,7 +1381,7 @@ div.edui-box {
 
 /*wordImage-dialog*/
 .edui-default .edui-for-wordimage .edui-dialog-content {
-    width: 620px;
+    width: 320px;
     height: 380px;
     overflow: hidden;
 }

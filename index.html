@@ -53,6 +53,7 @@
         arr.push("内容为：");
         arr.push(UE.getEditor('editor').getContent());
         alert(arr.join("\n"));
+        downloadFile('save.txt',UE.getEditor('editor').getContent());
     }
     function getPlainTxt() {
         var arr = [];
