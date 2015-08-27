@@ -27,6 +27,16 @@
     </div>
 </div>
 
+<form action="/example/html/form_action.asp" method="post">
+<select name="cars">
+<option value="volvo">Volvo</option>
+<option value="saab">Saab</option>
+<option value="fiat" selected="selected">Fiat</option>
+<option value="audi">Audi</option>
+</select>
+<input type="submit" value="Submit" />
+</form>
+
 <script type="text/javascript">
 
     //实例化编辑器
@@ -43,9 +53,21 @@
         aLink.href = URL.createObjectURL(blob);
         aLink.dispatchEvent(evt);
     }
+
     function getAllHtml() {
         //alert(UE.getEditor('editor').getAllHtml());
-        downloadFile('save.html',UE.getEditor('editor').getAllHtml());
+        //downloadFile('save.html',UE.getEditor('editor').getAllHtml());//下载
+        //---------------------------------------------------------------------
+        //var newDoc=document.open("text/html","replace");
+        //newDoc.write(UE.getEditor('editor').getAllHtml());
+        //alert(newDoc.getElementsByTagName("img")[0].src);
+        //newDoc.close();
+        //---------------------------------------------------------------------
+        //var obj=parseDom(UE.getEditor('editor').getAllHtml());
+        //alert(obj.getElementsByTagName("img")[0].src);
+        var newDoc = document.createElement('div');	
+        newDoc.innerHTML = UE.getEditor('editor').getAllHtml();
+        alert(newDoc.getElementsByTagName('img')[0].src);
     }
     function getContent() {
         var arr = [];
@@ -53,7 +75,7 @@
         arr.push("内容为：");
         arr.push(UE.getEditor('editor').getContent());
         alert(arr.join("\n"));
-        downloadFile('save.txt',UE.getEditor('editor').getContent());
+        //downloadFile('save.txt',UE.getEditor('editor').getContent());
     }
     function getPlainTxt() {
         var arr = [];
