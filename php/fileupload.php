@@ -117,7 +117,7 @@ if (isset($_REQUEST["name"])) {
 }
 //过滤文件名的非法字符
 $fileName = CUtf8_PY::encode($fileName);
-$fileName = substr($fileName, 0, strrpos($fileName, '.'));
+//$fileName = substr($fileName, 0, strrpos($fileName, '.'));
 $fileName = preg_replace("/[\|\?\"\<\>\/\*\\\+]/", '', $fileName);
 
 $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
