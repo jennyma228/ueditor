@@ -118,7 +118,7 @@ if (isset($_REQUEST["name"])) {
 //过滤文件名的非法字符
 $fileName = CUtf8_PY::encode($fileName);
 //$fileName = substr($fileName, 0, strrpos($fileName, '.'));
-$fileName = preg_replace("/[\|\?\"\<\>\/\*\\\+]/", '', $fileName);
+$fileName = preg_replace("/[\|\?\"\<\>\/\*\\\+\ \:\-]/", '', $fileName);
 
 $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
 $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
@@ -216,6 +216,34 @@ if ( $done ) {
     }
     @fclose($out);
 }
+
+
+
+$upfiletype = strtolower(strrchr($uploadPath, '.'));
+if(in_array($upfiletype, array('.jpg', '.jpeg', '.png', '.bmp')) && $_FILES["file"]["size"] > 100){
+  //echo $upfiletype;echo "</br>";
+  //echo $_FILES["file"]["size"];echo "</br>";
+  $newfile = basename($uploadPath);//filename
+  $newfile = substr($newfile, 0, strrpos($newfile, '.'));//filename without ext
+  $newfile = dirname($uploadPath).'/'.'mini_'.$newfile.'.jpg';//filename with path
+  $convertcmd = 'convert -scale 640x480 '.$uploadPath.' '.$newfile;
+  echo $convertcmd;echo "</br>";
+  exec($convertcmd);
+}
+if(in_array($upfiletype, array('.flv','.swf','.mkv','.avi','.rm','.rmvb','.mpeg','.mpg','.ogg','.ogv','.mov','.wmv','.mp4'))){
+  //echo $upfiletype;echo "</br>";
+  //echo $_FILES["file"]["size"];echo "</br>";
+  $newfile = substr($uploadPath, 0, strrpos($uploadPath, '.'));//filename without ext
+  $capturecmd = 'ffmpeg -i '.$uploadPath.' -y -f mjpeg -ss 2 -t 0.001 -s 320x240 '.$newfile.'.jpg';
+  echo $capturecmd;echo "</br>";
+  exec($capturecmd);
+
+  //$convertcmd = 'ffmpeg -i '.$uploadPath.' -y '.$newfile.'_.flv';
+  //echo $convertcmd;echo "</br>";
+  //exec($convertcmd);
+}
+
+
 
 // Return Success JSON-RPC response
 die($uploadPath);
