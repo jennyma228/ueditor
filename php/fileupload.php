@@ -125,7 +125,7 @@ $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
 //echo "fileName:";echo $fileName;echo "</br>";
 //echo "filePath:";echo $filePath;echo "</br>";
 //echo "uploadPath:";echo $uploadPath;echo "</br>";
-//echo "$_FILES:";print_r($_FILES);echo "</br>";
+echo "$_FILES:";print_r($_FILES);echo "</br>";
 // Chunking might be enabled
 $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
 $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 1;
@@ -220,16 +220,40 @@ if ( $done ) {
 
 
 $upfiletype = strtolower(strrchr($uploadPath, '.'));
-if(in_array($upfiletype, array('.jpg', '.jpeg', '.png', '.bmp')) && $_FILES["file"]["size"] > 100){
+if(in_array($upfiletype, array('.jpg', '.jpeg', '.png', '.bmp'))){
   //echo $upfiletype;echo "</br>";
   //echo $_FILES["file"]["size"];echo "</br>";
   $newfile = basename($uploadPath);//filename
   $newfile = substr($newfile, 0, strrpos($newfile, '.'));//filename without ext
-  $newfile = dirname($uploadPath).'/'.'mini_'.$newfile.'.jpg';//filename with path
-  $convertcmd = 'convert -scale 640x480 '.$uploadPath.' '.$newfile;
+  $tempfile = dirname($uploadPath).'/'.'tmp_'.$newfile.'.jpg';//temp filename with path
+  $markfile = dirname($uploadPath).'/'.'m_'.$newfile.'.jpg';//filename with watermark
+  $tmpthumbnail = dirname($uploadPath).'/'.'tmps_'.$newfile.'.jpg';//filename for thumbnail
+  $thumbnail = dirname($uploadPath).'/'.'s_'.$newfile.'.jpg';//filename for thumbnail
+
+  if($_FILES["file"]["size"] > 1024000){
+    $convertcmd = 'convert -scale 640x480 '.$uploadPath.' '.$tempfile;
+    echo $convertcmd;echo "</br>";
+    exec($convertcmd);
+  } else {
+    $tempfile = $uploadPath;
+  }
+
+  $convertcmd = 'composite -gravity southeast logo_news.png '.$tempfile.' '.$markfile;
   echo $convertcmd;echo "</br>";
   exec($convertcmd);
+
+  $convertcmd = 'convert -sample 250x250 '.$tempfile.' '.$tmpthumbnail;
+  echo $convertcmd;echo "</br>";
+  exec($convertcmd);
+
+  $convertcmd = 'composite -gravity southeast logo.png '.$tmpthumbnail.' '.$thumbnail;
+  echo $convertcmd;echo "</br>";
+  exec($convertcmd);
+
+  if(file_exists($tempfile)) unlink($tempfile);
+  if(file_exists($tmpthumbnail)) unlink($tmpthumbnail);
 }
+
 if(in_array($upfiletype, array('.flv','.swf','.mkv','.avi','.rm','.rmvb','.mpeg','.mpg','.ogg','.ogv','.mov','.wmv','.mp4'))){
   //echo $upfiletype;echo "</br>";
   //echo $_FILES["file"]["size"];echo "</br>";
