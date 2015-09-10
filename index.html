@@ -1,44 +1,102 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Cleverdog</title>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />      
-    <script type="text/javascript" charset="utf-8" src="ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="ueditor.all.min.js"> </script>
-    <style type="text/css">
-        div{
-            width:100%;
-        }
-    </style>
+  <title>Cleverdog</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />      
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" charset="utf-8" src="ueditor.config.js"></script>
+  <script type="text/javascript" charset="utf-8" src="ueditor.all.min.js"> </script>
+  <style type="text/css">div{width:100%;}</style>
 </head>
 <body>
 <div>
-    <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+    <script id="editor" type="text/plain" style="width:640px;height:480px;"></script>
 </div>
+
+<div id="info">
+<form id="form1" name="form1">
+  <select name="pagetype" onChange="getSubject()" id="pagetype">
+    <option value="0">选择分类</option>
+    <option value="task">作业 </option>
+    <option value="action">活动 </option>
+    <option value="wiki">科普 </option>
+    <option value="massage">消息 </option>
+  </select>
+  <select name="pagesubject" id="pagesubject">
+    <option value="0">选择科目</option>
+  </select>
+  <input type="submit" value="上传网站"/> 
+  <span id="msg"></span></p> 
+</form>
+    <div id="output"></div>
+</div>
+
 <div id="btns">
     <div>
-        <button onclick="getAllHtml()">获得整个html的内容</button>
-        <button onclick="getContent()">获得内容</button>
-        <button onclick="getContentTxt()">获得纯文本</button>
-        <button onclick="getPlainTxt()">获得带格式的纯文本</button>
-        <button onclick="hasContent()">判断是否有内容</button>
+        <!--<button onclick="getAllHtml()">获得整个html的内容</button>-->
+        <button onclick="getContent()">获得整个内容</button>
+        <!--<button onclick="getContentTxt()">获得纯文本</button>-->
+        <!--<button onclick="getPlainTxt()">获得带格式的纯文本</button>-->
+        <!--<button onclick="hasContent()">判断是否有内容</button>-->
     </div>
 </div>
 
-<form action="/example/html/form_action.asp" method="post">
-<select name="cars">
-<option value="volvo">Volvo</option>
-<option value="saab">Saab</option>
-<option value="fiat" selected="selected">Fiat</option>
-<option value="audi">Audi</option>
-</select>
-<input type="submit" value="Submit" />
-</form>
+<script language="JavaScript" type="text/javascript">
+  //定义了科目的二维数组，里面的顺序跟文章分类的顺序是相同的。
+  //通过selectedIndex获得文章分类的下标值来得到相应的科目数组
+  var Subject=[["语文","数学","英语","体育","美术","音乐","其他"],
+    ["班级活动","学校活动","小队活动","社区活动"],
+    ["品德情商","安全健康","生活百科","自然科学"],
+    ["生日派对","商品推广","天气资讯","社区通知"]];
+  function getSubject(){
+    var sltType=document.form1.pagetype;//获得文章分类下拉框的对象
+    var sltSubject=document.form1.pagesubject;//获得文章科目下拉框的对象      
+    var TypeSubject=Subject[sltType.selectedIndex - 1];//得到对应分类的科目数组
+    sltSubject.length=1;//清空科目下拉框，仅留提示选项
+    for(var i=0;i<TypeSubject.length;i++){//将城市数组中的值填充到城市下拉框中
+      sltSubject[i+1]=new Option(TypeSubject[i],TypeSubject[i]);
+    }
+  }
+
+  //将form转为AJAX提交
+  function ajaxup() {
+    var pagetype = $("#pagetype").val(); 
+    if(pagetype=="0"){ 
+      $("#msg").html("分类不能为空！"); 
+      return false; 
+    } 
+    var pagesubject = $("#pagesubject").val(); 
+    if(pagesubject=="0"){ 
+      $("#msg").html("科目不能为空！"); 
+      return false; 
+    } 
+    $("#msg").html("正在提交..."); 
+    var formParam = $("#my_form").serialize(); 
+    $.ajax({
+       type:"POST",
+       url:"http://www.cleverdog.cn/exe/uploadFiles",
+       dataType:"json",
+       data:formParam,
+       success:function(data){
+          $("#msg").html(data.mytitle);
+          $("#pagetype").val(0);
+          $("#pagesubject").val(0);
+       }
+    })
+  }
+
+  $(document).ready(function(){
+      $('#form1').bind('submit', function(){
+          ajaxup(this, function(data){
+              //alert(data);
+          });
+          return false;
+      });
+  });
+</script>
 
 <script type="text/javascript">
-
     //实例化编辑器
     //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
     var ue = UE.getEditor('editor',{ initialFrameWidth:screen.availWidth-15 });
@@ -99,5 +157,6 @@
         alert(arr.join("\n"));
     }
 </script>
+
 </body>
 </html>
