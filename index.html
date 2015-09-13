@@ -25,7 +25,9 @@
   </select>
   <select name="pagesubject" id="pagesubject">
     <option value="0">选择科目</option>
-  </select>
+  </select><br/>
+姓名：<input name="yourname" type="text" maxlength="5" style = "width:100px"/><br/>
+密码：<input name="password" type="password" maxlength="5" style = "width:100px"/><br/>
   <input type="submit" value="上传网站"/> 
   <span id="msg"></span></p> 
 </form>
@@ -69,6 +71,16 @@
     var pagesubject = $("#pagesubject").val(); 
     if(pagesubject=="0"){ 
       $("#msg").html("科目不能为空！"); 
+      return false; 
+    } 
+    var yourname = $("#yourname").val(); 
+    if(yourname=="0"){ 
+      $("#msg").html("姓名不能为空！"); 
+      return false; 
+    } 
+    var password = $("#password").val(); 
+    if(pagesubject=="0"){ 
+      $("#msg").html("密码不能为空！"); 
       return false; 
     } 
     $("#msg").html("正在提交..."); 
