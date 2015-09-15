@@ -18,16 +18,17 @@
 <form id="form1" name="form1">
   <select name="pagetype" onChange="getSubject()" id="pagetype">
     <option value="0">选择分类</option>
-    <option value="task">作业 </option>
-    <option value="action">活动 </option>
-    <option value="wiki">科普 </option>
-    <option value="massage">消息 </option>
+    <option value="1">作业 </option>
+    <option value="2">活动 </option>
+    <option value="3">科普 </option>
+    <option value="4">消息 </option>
   </select>
   <select name="pagesubject" id="pagesubject">
     <option value="0">选择科目</option>
   </select><br/>
-姓名：<input name="yourname" type="text" maxlength="5" style = "width:100px"/><br/>
-密码：<input name="password" type="password" maxlength="5" style = "width:100px"/><br/>
+  <input name="pagetitle" id="pagetitle" type="text" maxlength="20" style = "width:100px" placeholder="请输入文章主题"/><br/>
+  <input name="yourname" id="yourname" type="text" maxlength="10" style = "width:100px" placeholder="填写姓名"/><br/>
+  <input name="password" id="password" type="password" maxlength="10" style = "width:100px" placeholder="填写密码"/><br/>
   <input type="submit" value="上传网站"/> 
   <span id="msg"></span></p> 
 </form>
@@ -37,7 +38,7 @@
 <div id="btns">
     <div>
         <!--<button onclick="getAllHtml()">获得整个html的内容</button>-->
-        <button onclick="getContent()">获得整个内容</button>
+        <!--<button onclick="getContent()">获得整个内容</button>-->
         <!--<button onclick="getContentTxt()">获得纯文本</button>-->
         <!--<button onclick="getPlainTxt()">获得带格式的纯文本</button>-->
         <!--<button onclick="hasContent()">判断是否有内容</button>-->
@@ -57,9 +58,18 @@
     var TypeSubject=Subject[sltType.selectedIndex - 1];//得到对应分类的科目数组
     sltSubject.length=1;//清空科目下拉框，仅留提示选项
     for(var i=0;i<TypeSubject.length;i++){//将城市数组中的值填充到城市下拉框中
-      sltSubject[i+1]=new Option(TypeSubject[i],TypeSubject[i]);
+      sltSubject[i+1]=new Option(TypeSubject[i],i+1);
     }
   }
+
+  //Html编码获取Html转义实体
+  //function htmlEncode(value){
+  //  return $('<div>/').text(value).html();// /要前移
+  //}
+  //Html解码获取Html实体
+  //function htmlDecode(value){
+  //  return $('<div>/').html(value).text();// /要前移
+  //}
 
   //将form转为AJAX提交
   function ajaxup() {
@@ -73,18 +83,43 @@
       $("#msg").html("科目不能为空！"); 
       return false; 
     } 
+    var pagetitle = $("#pagetitle").val(); 
+    if(pagetitle==''){ 
+      $("#msg").html("主题不能为空！"); 
+      return false; 
+    } 
     var yourname = $("#yourname").val(); 
-    if(yourname=="0"){ 
+    if(yourname==''){ 
       $("#msg").html("姓名不能为空！"); 
       return false; 
     } 
     var password = $("#password").val(); 
-    if(pagesubject=="0"){ 
+    if(password==''){ 
       $("#msg").html("密码不能为空！"); 
       return false; 
     } 
     $("#msg").html("正在提交..."); 
-    var formParam = $("#my_form").serialize(); 
+
+    var newDoc = document.createElement('div');	
+    newDoc.innerHTML = UE.getEditor('editor').getAllHtml();
+    var picobj = newDoc.getElementsByTagName('img');
+    var picsrc;
+    if (picobj[0] == undefined ) { 
+      picsrc="default picture!"; 
+      //return false; 
+    }else{
+      picsrc = picobj[0].src;
+    }
+    //alert(picsrc);
+    //$("#msg").html(picsrc);
+
+    var formParam = $("#form1").serialize(); 
+    formParam+='&thumbnail='+encodeURIComponent(picsrc);
+    formParam+='&mytext='+encodeURIComponent(UE.getEditor('editor').getContentTxt());
+    formParam+='&content='+encodeURIComponent(UE.getEditor('editor').getContent());
+
+    //alert(formParam);
+
     $.ajax({
        type:"POST",
        url:"http://www.cleverdog.cn/exe/uploadFiles",
@@ -92,19 +127,19 @@
        data:formParam,
        success:function(data){
           $("#msg").html(data.mytitle);
-          $("#pagetype").val(0);
+          //$("#pagetype").val(0);
           $("#pagesubject").val(0);
        }
     })
   }
 
   $(document).ready(function(){
-      $('#form1').bind('submit', function(){
-          ajaxup(this, function(data){
-              //alert(data);
-          });
-          return false;
+    $('#form1').bind('submit', function(){
+      ajaxup(this, function(data){
+        //alert(data);
       });
+      return false;
+    });
   });
 </script>
 
@@ -125,7 +160,7 @@
     }
 
     function getAllHtml() {
-        //alert(UE.getEditor('editor').getAllHtml());
+        alert(UE.getEditor('editor').getAllHtml());
         //downloadFile('save.html',UE.getEditor('editor').getAllHtml());//下载
         //---------------------------------------------------------------------
         //var newDoc=document.open("text/html","replace");
@@ -135,9 +170,15 @@
         //---------------------------------------------------------------------
         //var obj=parseDom(UE.getEditor('editor').getAllHtml());
         //alert(obj.getElementsByTagName("img")[0].src);
-        var newDoc = document.createElement('div');	
-        newDoc.innerHTML = UE.getEditor('editor').getAllHtml();
-        alert(newDoc.getElementsByTagName('img')[0].src);
+        //---------------------------------------------------------------------
+        //var newDoc = document.createElement('div');	
+        //newDoc.innerHTML = UE.getEditor('editor').getAllHtml();
+        //var obj = newDoc.getElementsByTagName('img');
+        //if (obj[0] == undefined ) { 
+        //  alert("no picture!"); 
+        //}else{
+        //  alert(obj[0].src);
+        //}
     }
     function getContent() {
         var arr = [];
