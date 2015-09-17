@@ -116,17 +116,22 @@
     var formParam = $("#form1").serialize(); 
     formParam+='&thumbnail='+encodeURIComponent(picsrc);
     formParam+='&mytext='+encodeURIComponent(UE.getEditor('editor').getContentTxt());
-    formParam+='&content='+encodeURIComponent(UE.getEditor('editor').getContent());
+    formParam+='&content='+encodeURIComponent(UE.getEditor('editor').getAllHtml());
 
     //alert(formParam);
-
+    var posturl;
+    if(document.domain=="localhost"){
+      posturl="http://localhost/exe/uploadPage";
+    }else {
+      posturl="http://www.clerverdog.cn/exe/uploadPage";
+    }
     $.ajax({
        type:"POST",
-       url:"http://www.cleverdog.cn/exe/uploadPage",
+       url:posturl,
        dataType:"json",
        data:formParam,
        success:function(data){
-          $("#msg").html(data.mytitle);
+          $("#msg").html(data.status);
           //$("#pagetype").val(0);
           $("#pagesubject").val(0);
        }
