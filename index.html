@@ -29,7 +29,7 @@
   <input name="pagetitle" id="pagetitle" type="text" maxlength="20" style = "width:100px" placeholder="请输入文章主题"/><br/>
   <input name="yourname" id="yourname" type="text" maxlength="10" style = "width:100px" placeholder="填写姓名"/><br/>
   <input name="password" id="password" type="password" maxlength="10" style = "width:100px" placeholder="填写密码"/><br/>
-  <input type="submit" value="上传网站"/> 
+  <input type="submit" value="上传网站"/> <button onclick="history.back()">返回主页</button>
   <span id="msg"></span></p> 
 </form>
     <div id="output"></div>
@@ -58,7 +58,7 @@
     var TypeSubject=Subject[sltType.selectedIndex - 1];//得到对应分类的科目数组
     sltSubject.length=1;//清空科目下拉框，仅留提示选项
     for(var i=0;i<TypeSubject.length;i++){//将城市数组中的值填充到城市下拉框中
-      sltSubject[i+1]=new Option(TypeSubject[i],i+1);
+      sltSubject[i+1]=new Option(TypeSubject[i],i+2);//广告位不能覆盖
     }
   }
 
@@ -115,8 +115,8 @@
 
     var formParam = $("#form1").serialize(); 
     formParam+='&thumbnail='+encodeURIComponent(picsrc);
-    formParam+='&mytext='+encodeURIComponent(UE.getEditor('editor').getContentTxt());
-    formParam+='&content='+encodeURIComponent(UE.getEditor('editor').getAllHtml());
+    formParam+='&summary='+encodeURIComponent(UE.getEditor('editor').getContentTxt());
+    formParam+='&content='+encodeURIComponent(UE.getEditor('editor').getContent());
 
     //alert(formParam);
     var posturl;
