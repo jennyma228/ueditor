@@ -3,7 +3,7 @@ gen_index()
 {
   rename 's/ /_/g' *;
   echo "" > index.html
-  echo "<html><head><title>My HTML Image Viewer</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"/></head><body>" >> index.html
+  echo "<html><head><title>My HTML Image Viewer</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"/><script type=\"text/javascript\" src=\"/dog_files/player.js\"></script><script type=\"text/javascript\" src=\"/dog_files/jquery.js\"></script></head><body>" >> index.html
 
   for f in `ls -F |grep "/$"`; do
     echo "<a href=\"${f}index.html\"/>${f}</a><br>" >> index.html
@@ -18,17 +18,15 @@ gen_index()
     echo "<img src=\"$f\" style=\"max-width: 98%; width: 223px; height: 216px;\" alt=\"$f\"/><br>" >> index.html
   done
   for f in `ls *.mp4`; do
-    echo "<a href=\"$f\">$f</a><br>" >> index.html
-    echo "<p><video class=\"edui-upload-video vjs-default-skin video-js\" controls=\"\" preload=\"none\" width=\"320\" height=\"280\" src=\"$f\" type=\"video/mp4\"></source></video></p><br>"  >> index.html
+    echo "<a href=\"javascript:playvideo('$f')\">$f</a><br>" >> index.html
   done
   for f in `ls *.mp3`; do
-    echo "<a href=\"$f\">$f</a><br>" >> index.html
-    echo "<p><audio src=\"$f\" autoplay=\"autoplay\" controls=\"controls\" style=\"max-width: 100%; box-sizing: border-box !important;\"></audio></p><br>" >> index.html
+    echo "<a href=\"javascript:playaudio('$f')\">$f</a><br>" >> index.html
   done
   for f in `ls *.MP3`; do
-    echo "<a href=\"$f\">$f</a><br>" >> index.html
-    echo "<p><audio src=\"$f\" autoplay=\"autoplay\" controls=\"controls\" style=\"max-width: 100%; box-sizing: border-box !important;\"></audio></p><br>" >> index.html
+    echo "<a href=\"javascript:playaudio('$f')\">$f</a><br>" >> index.html
   done
+  echo "<div class=\"myplayer\"></div>" >> index.html
   echo "</body></html>" >> index.html
   chmod 755 index.html
 }
