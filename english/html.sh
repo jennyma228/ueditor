@@ -1,6 +1,7 @@
 #!/bin/bash
 gen_index()
 {
+  rename 's/ /_/g' *;
   echo "" > index.html
   echo "<html><head><title>My HTML Image Viewer</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"/></head><body>" >> index.html
 
@@ -19,7 +20,14 @@ gen_index()
   for f in `ls *.mp4`; do
     echo "<a href=\"$f\">$f</a><br>" >> index.html
   done
+  for f in `ls *.mp3`; do
+    echo "<a href=\"$f\">$f</a><br>" >> index.html
+  done
+  for f in `ls *.MP3`; do
+    echo "<a href=\"$f\">$f</a><br>" >> index.html
+  done
   echo "</body></html>" >> index.html
+  chmod 755 index.html
 }
 
 myfunc()
@@ -30,13 +38,14 @@ myfunc()
                         echo "$x";
                 elif [ -L "$x" ];then
                         echo "this is a link";
-                else
+                elif [ -d "$x" ];then
                         cd "$x";
                         myfunc;
                         gen_index;
                         cd ..
                 fi
-        done
+         done
 }
 
 myfunc
+gen_index
