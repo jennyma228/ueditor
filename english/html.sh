@@ -3,7 +3,7 @@ gen_index()
 {
   rename 's/ /_/g' *;
   echo "" > index.html
-  echo "<html><head><title>My HTML Image Viewer</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"/><script type=\"text/javascript\" src=\"/dog_files/player.js\"></script><script type=\"text/javascript\" src=\"/dog_files/jquery.js\"></script></head><body>" >> index.html
+  echo "<html><head><title>www.cleverdog.cn</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"/><script type=\"text/javascript\" src=\"/dog_files/player.js\"></script><script type=\"text/javascript\" src=\"/dog_files/jquery.js\"></script></head><body>" >> index.html
 
   for f in `ls -F |grep "/$"`; do
     echo "<a href=\"${f}index.html\"/>${f}</a><br>" >> index.html
