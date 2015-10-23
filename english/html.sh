@@ -24,6 +24,7 @@ gen_index()
     echo "<form id=\"form1\" name=\"form1\">" >> index.html
     echo "<fieldset data-role=\"fieldcontain\">" >> index.html
     echo "<select name=\"mediafile\"  onChange=\"playmedia()\" id=\"mediafile\">" >> index.html
+    echo "<option value=\"select\">请选择文件播放</option>" >> index.html
     for f in `find . -maxdepth 1 \( -type f -a -name "*.mp3" -o -name "*.mp4" -o -name "*.MP3" -o -name "*.MP4" \)`; do
       echo "<option value=\"${f:2}\">${f:2}</option>" >> index.html
     done
